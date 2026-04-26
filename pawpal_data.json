@@ -1,145 +1,23 @@
 {
   "owner": {
-    "name": "Jordan",
-    "available_minutes": 90,
+    "name": "Kousalya",
+    "available_minutes": 120,
     "pet": {
-      "name": "Mochi",
+      "name": "Choco",
       "species": "dog",
-      "age": 3
+      "age": 1
     }
   },
   "tasks": [
     {
-      "title": "Bath",
-      "duration_minutes": 45,
-      "priority": "low",
+      "title": "Morning walk",
+      "duration_minutes": 20,
+      "priority": "high",
       "recurrence": null,
-      "start_time": null,
-      "completed": true
-    },
-    {
-      "title": "Fetch / playtime",
-      "duration_minutes": 40,
-      "priority": "low",
-      "recurrence": null,
-      "start_time": null,
-      "completed": false
-    },
-    {
-      "title": "Flea medication",
-      "duration_minutes": 5,
-      "priority": "medium",
-      "recurrence": "weekly",
-      "start_time": "9:10 AM",
-      "completed": true
-    },
-    {
-      "title": "Breakfast feeding",
-      "duration_minutes": 10,
-      "priority": "high",
-      "recurrence": "daily",
-      "start_time": "8:00 AM",
-      "completed": true
-    },
-    {
-      "title": "Morning walk",
-      "duration_minutes": 30,
-      "priority": "high",
-      "recurrence": "daily",
-      "start_time": "8:10 AM",
-      "completed": true
-    },
-    {
-      "title": "Morning walk",
-      "duration_minutes": 30,
-      "priority": "high",
-      "recurrence": "daily",
-      "start_time": "8:40 AM",
-      "completed": true
-    },
-    {
-      "title": "Flea medication",
-      "duration_minutes": 5,
-      "priority": "medium",
-      "recurrence": "weekly",
-      "start_time": "9:15 AM",
-      "completed": false
-    },
-    {
-      "title": "Morning walk",
-      "duration_minutes": 30,
-      "priority": "high",
-      "recurrence": "daily",
-      "start_time": null,
-      "completed": false
-    },
-    {
-      "title": "Morning walk",
-      "duration_minutes": 30,
-      "priority": "high",
-      "recurrence": "daily",
       "start_time": null,
       "completed": false
     }
   ],
-  "scheduled_tasks": [
-    {
-      "title": "Breakfast feeding",
-      "duration_minutes": 10,
-      "priority": "high",
-      "recurrence": "daily",
-      "start_time": "8:00 AM",
-      "completed": true
-    },
-    {
-      "title": "Morning walk",
-      "duration_minutes": 30,
-      "priority": "high",
-      "recurrence": "daily",
-      "start_time": "8:10 AM",
-      "completed": true
-    },
-    {
-      "title": "Morning walk",
-      "duration_minutes": 30,
-      "priority": "high",
-      "recurrence": "daily",
-      "start_time": "8:40 AM",
-      "completed": true
-    },
-    {
-      "title": "Flea medication",
-      "duration_minutes": 5,
-      "priority": "medium",
-      "recurrence": "weekly",
-      "start_time": "9:10 AM",
-      "completed": true
-    },
-    {
-      "title": "Flea medication",
-      "duration_minutes": 5,
-      "priority": "medium",
-      "recurrence": "weekly",
-      "start_time": "9:15 AM",
-      "completed": false
-    }
-  ],
-  "skipped_tasks": [
-    {
-      "title": "Bath",
-      "duration_minutes": 45,
-      "priority": "low",
-      "recurrence": null,
-      "start_time": null,
-      "completed": true
-    },
-    {
-      "title": "Fetch / playtime",
-      "duration_minutes": 40,
-      "priority": "low",
-      "recurrence": null,
-      "start_time": null,
-      "completed": false
-    }
-  ]
+  "scheduled_tasks": [],
+  "skipped_tasks": []
 }

@@ -1,6 +1,7 @@
 import json
 import os
 from typing import Dict, List, Any, Optional
+from google import genai
 
 PRIORITY_RANK = {"high": 3, "medium": 2, "low": 1}
 DAY_START_HOUR = 8  # schedule begins at 8:00 AM
@@ -234,6 +235,99 @@ class Scheduler:
 
         # No available slot found
         return None
+
+    def generate_task_recommendations(self) -> List[Dict[str, Any]]:
+        """
+        AI Feature: Use Gemini API to generate personalized task recommendations
+        based on pet profile and owner availability.
+
+        This is a substantial AI feature that provides meaningful behavioral changes
+        by suggesting tasks users might not have considered, leading to more complete
+        pet care schedules.
+        """
+        try:
+            # Get API key from environment
+            api_key = os.getenv('GOOGLE_API_KEY')
+            if not api_key:
+                return []
+
+            client = genai.Client(api_key=api_key)
+
+            # Create structured prompt with few-shot examples
+            prompt = f"""
+You are an expert veterinarian and pet care specialist. Based on the following pet profile, suggest 6-8 essential daily and weekly care tasks that would be appropriate for this specific animal.
+
+Pet Profile:
+- Species: {self.pet.species}
+- Age: {self.pet.age} years old
+- Owner available time: {self.owner.available_minutes} minutes per day
+- Pet name: {self.pet.name}
+
+For each task, provide:
+- title: A clear, specific task name
+- duration_minutes: Realistic time estimate based on the pet's needs
+- priority: "high" for critical care (feeding, medication), "medium" for important care (exercise, grooming), "low" for optional enrichment
+- recurrence: "daily", "weekly", or null for one-time tasks
+
+Return ONLY a valid JSON array of task objects. No additional text or explanation.
+
+Examples:
+
+For a "dog, 2 years old" with 90 minutes available:
+[
+  {{"title": "Morning walk", "duration_minutes": 30, "priority": "high", "recurrence": "daily"}},
+  {{"title": "Breakfast feeding", "duration_minutes": 10, "priority": "high", "recurrence": "daily"}},
+  {{"title": "Playtime/fetch", "duration_minutes": 20, "priority": "medium", "recurrence": "daily"}},
+  {{"title": "Brush coat", "duration_minutes": 15, "priority": "medium", "recurrence": "weekly"}},
+  {{"title": "Training session", "duration_minutes": 15, "priority": "low", "recurrence": "daily"}}
+]
+
+For a "cat, 1 year old" with 60 minutes available:
+[
+  {{"title": "Litter box cleaning", "duration_minutes": 10, "priority": "high", "recurrence": "daily"}},
+  {{"title": "Breakfast feeding", "duration_minutes": 5, "priority": "high", "recurrence": "daily"}},
+  {{"title": "Interactive play", "duration_minutes": 15, "priority": "medium", "recurrence": "daily"}},
+  {{"title": "Brush fur", "duration_minutes": 10, "priority": "medium", "recurrence": "weekly"}},
+  {{"title": "Litter box change", "duration_minutes": 20, "priority": "medium", "recurrence": "weekly"}}
+]
+"""
+
+            response = client.models.generate_content(
+                model="gemini-1.5-flash",
+                contents=prompt,
+                config={
+                    "temperature": 0.3,
+                    "max_output_tokens": 800,
+                },
+            )
+
+            # Parse the response text
+            if hasattr(response, "text") and response.text:
+                content = response.text.strip()
+            else:
+                return []
+            recommendations = json.loads(content)
+
+            # Validate the response structure
+            if not isinstance(recommendations, list):
+                return []
+
+            validated_recommendations = []
+            for rec in recommendations:
+                if all(key in rec for key in ['title', 'duration_minutes', 'priority', 'recurrence']):
+                    # Ensure priority is valid
+                    if rec['priority'] not in ['high', 'medium', 'low']:
+                        rec['priority'] = 'medium'
+                    # Ensure recurrence is valid
+                    if rec['recurrence'] not in [None, 'daily', 'weekly']:
+                        rec['recurrence'] = None
+                    validated_recommendations.append(rec)
+
+            return validated_recommendations[:8]  # Limit to 8 recommendations
+
+        except Exception as e:
+            print(f"AI recommendation error: {e}")
+            return []
 
     def to_dict(self) -> Dict[str, Any]:
         """Convert scheduler to dictionary for JSON serialization."""

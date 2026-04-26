@@ -107,6 +107,63 @@ if current_tasks:
 else:
     st.info("No tasks yet. Add one above.")
 
+# --- AI Task Recommendations ---
+st.subheader("🤖 AI Task Recommendations")
+
+col1, col2 = st.columns([1, 1])
+with col1:
+    if st.button("Get AI Suggestions", type="primary"):
+        with st.spinner("🤖 AI is analyzing your pet's needs..."):
+            recommendations = st.session_state.scheduler.generate_task_recommendations()
+            if recommendations:
+                st.session_state.ai_recommendations = recommendations
+                st.success(f"🤖 Generated {len(recommendations)} personalized task suggestions!")
+            else:
+                st.error("❌ Could not generate recommendations. Check your GOOGLE_API_KEY environment variable.")
+
+with col2:
+    if st.button("Clear Suggestions"):
+        if "ai_recommendations" in st.session_state:
+            del st.session_state.ai_recommendations
+        st.success("Suggestions cleared.")
+
+# Display AI recommendations if available
+if "ai_recommendations" in st.session_state and st.session_state.ai_recommendations:
+    st.write("**Review and select tasks to add:**")
+
+    # Create checkboxes for each recommendation
+    selected_indices = []
+    for i, rec in enumerate(st.session_state.ai_recommendations):
+        priority_emoji = PRIORITY_EMOJI.get(rec['priority'], rec['priority'])
+        recurrence_text = f" ({rec['recurrence']})" if rec['recurrence'] else ""
+
+        label = f"**{rec['title']}** - {rec['duration_minutes']} min, {priority_emoji}{recurrence_text}"
+        if st.checkbox(label, key=f"rec_{i}"):
+            selected_indices.append(i)
+
+    # Add selected tasks button
+    if selected_indices:
+        if st.button(f"✅ Add {len(selected_indices)} Selected Task(s)", type="primary"):
+            added_count = 0
+            for idx in selected_indices:
+                rec = st.session_state.ai_recommendations[idx]
+                task = Task(
+                    title=rec['title'],
+                    duration_minutes=rec['duration_minutes'],
+                    priority=rec['priority'],
+                    recurrence=rec['recurrence']
+                )
+                st.session_state.scheduler.add_task(task)
+                added_count += 1
+
+            # Save after adding tasks
+            st.session_state.scheduler.save_to_file(PERSISTENCE_FILE)
+            st.success(f"✅ Added {added_count} AI-recommended task(s) to your schedule! 💾")
+
+            # Clear the recommendations after adding
+            del st.session_state.ai_recommendations
+            st.rerun()
+
 st.divider()
 
 # --- Generate schedule ---
