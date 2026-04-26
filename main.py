@@ -1,8 +1,12 @@
 import sys
+import os
 sys.stdout.reconfigure(encoding="utf-8")
 
 from tabulate import tabulate
 from pawpal_system import Pet, Owner, Task, Scheduler, find_cross_scheduler_conflicts
+
+# Data persistence file
+PERSISTENCE_FILE = "pawpal_data.json"
 
 # ---------------------------------------------------------------------------
 # ANSI color helpers
@@ -97,29 +101,50 @@ def print_warnings(warnings):
 
 
 # ---------------------------------------------------------------------------
-# Pets & Owners
+# Data Loading - Persistence Demo
 # ---------------------------------------------------------------------------
 
-mochi = Pet(name="Mochi", species="dog", age=3)
-luna  = Pet(name="Luna",  species="cat", age=5)
+print(f"{BOLD}🐾 PawPal+ Persistence Demo{RESET}")
+print(f"Data file: {cyan(PERSISTENCE_FILE)}")
 
-jordan = Owner(name="Jordan", available_minutes=90, pet=mochi)
-alex   = Owner(name="Alex",   available_minutes=60, pet=luna)
+# Try to load existing data first
+loaded_scheduler = Scheduler.load_from_file(PERSISTENCE_FILE)
+if loaded_scheduler:
+    print(green("✅ Loaded previous session data!"))
+    mochi_scheduler = loaded_scheduler
+    # For demo purposes, create a second scheduler with demo data
+    luna = Pet(name="Luna", species="cat", age=5)
+    alex = Owner(name="Alex", available_minutes=60, pet=luna)
+    luna_scheduler = Scheduler(owner=alex)
+    luna_scheduler.add_task(Task(title="Laser pointer play", duration_minutes=20, priority="low"))
+    luna_scheduler.add_task(Task(title="Vet checkup prep", duration_minutes=30, priority="medium"))
+    luna_scheduler.add_task(Task(title="Brush / grooming", duration_minutes=15, priority="medium"))
+    luna_scheduler.add_task(Task(title="Litter box cleaning", duration_minutes=10, priority="high"))
+    luna_scheduler.add_task(Task(title="Breakfast feeding", duration_minutes=10, priority="high"))
+else:
+    print(yellow("📝 No saved data found, using demo data..."))
 
-# Tasks added out of order (low priority first) to prove sorting works
-mochi_scheduler = Scheduler(owner=jordan)
-mochi_scheduler.add_task(Task(title="Bath",             duration_minutes=45, priority="low"))
-mochi_scheduler.add_task(Task(title="Fetch / playtime", duration_minutes=40, priority="low"))
-mochi_scheduler.add_task(Task(title="Flea medication",  duration_minutes=5,  priority="medium", recurrence="weekly"))
-mochi_scheduler.add_task(Task(title="Breakfast feeding",duration_minutes=10, priority="high",   recurrence="daily"))
-mochi_scheduler.add_task(Task(title="Morning walk",     duration_minutes=30, priority="high",   recurrence="daily"))
+    # Create demo pets and owners
+    mochi = Pet(name="Mochi", species="dog", age=3)
+    luna = Pet(name="Luna", species="cat", age=5)
 
-luna_scheduler = Scheduler(owner=alex)
-luna_scheduler.add_task(Task(title="Laser pointer play", duration_minutes=20, priority="low"))
-luna_scheduler.add_task(Task(title="Vet checkup prep",   duration_minutes=30, priority="medium"))
-luna_scheduler.add_task(Task(title="Brush / grooming",   duration_minutes=15, priority="medium"))
-luna_scheduler.add_task(Task(title="Litter box cleaning",duration_minutes=10, priority="high"))
-luna_scheduler.add_task(Task(title="Breakfast feeding",  duration_minutes=10, priority="high"))
+    jordan = Owner(name="Jordan", available_minutes=90, pet=mochi)
+    alex = Owner(name="Alex", available_minutes=60, pet=luna)
+
+    # Tasks added out of order (low priority first) to prove sorting works
+    mochi_scheduler = Scheduler(owner=jordan)
+    mochi_scheduler.add_task(Task(title="Bath", duration_minutes=45, priority="low"))
+    mochi_scheduler.add_task(Task(title="Fetch / playtime", duration_minutes=40, priority="low"))
+    mochi_scheduler.add_task(Task(title="Flea medication", duration_minutes=5, priority="medium", recurrence="weekly"))
+    mochi_scheduler.add_task(Task(title="Breakfast feeding", duration_minutes=10, priority="high", recurrence="daily"))
+    mochi_scheduler.add_task(Task(title="Morning walk", duration_minutes=30, priority="high", recurrence="daily"))
+
+    luna_scheduler = Scheduler(owner=alex)
+    luna_scheduler.add_task(Task(title="Laser pointer play", duration_minutes=20, priority="low"))
+    luna_scheduler.add_task(Task(title="Vet checkup prep", duration_minutes=30, priority="medium"))
+    luna_scheduler.add_task(Task(title="Brush / grooming", duration_minutes=15, priority="medium"))
+    luna_scheduler.add_task(Task(title="Litter box cleaning", duration_minutes=10, priority="high"))
+    luna_scheduler.add_task(Task(title="Breakfast feeding", duration_minutes=10, priority="high"))
 
 # Build schedules
 mochi_scheduler.build_schedule()
@@ -247,3 +272,18 @@ s2.build_schedule()
 print_warnings(find_cross_scheduler_conflicts([s1, s2]))
 
 print()
+
+# ============================================================
+# DATA PERSISTENCE DEMO
+# ============================================================
+
+header("DATA PERSISTENCE DEMO")
+
+print(f"Saving Mochi's scheduler to {cyan(PERSISTENCE_FILE)}...")
+mochi_scheduler.save_to_file(PERSISTENCE_FILE)
+print(green("✅ Data saved successfully!"))
+print(f"File size: {os.path.getsize(PERSISTENCE_FILE) if os.path.exists(PERSISTENCE_FILE) else 0} bytes")
+
+print(f"\nNext time you run this script, it will load the saved data automatically!")
+print(f"You can also run the web app with: {cyan('streamlit run app.py')}")
+print(f"The web app will persist data between browser sessions.")

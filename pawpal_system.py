@@ -1,3 +1,7 @@
+import json
+import os
+from typing import Dict, List, Any, Optional
+
 PRIORITY_RANK = {"high": 3, "medium": 2, "low": 1}
 DAY_START_HOUR = 8  # schedule begins at 8:00 AM
 
@@ -176,6 +180,167 @@ class Scheduler:
             key=lambda t: _time_str_to_minutes(t.start_time) if t.start_time else 0
         )
         return self.scheduled_tasks
+
+    def find_next_available_slot(self, duration_minutes: int) -> str | None:
+        """
+        Advanced Algorithmic Capability: Find the earliest available time slot
+        that can accommodate a task of the given duration, considering existing
+        scheduled tasks and the owner's total available time.
+
+        This goes beyond basic sequential scheduling by intelligently finding
+        gaps in the schedule where new tasks can be inserted optimally.
+
+        Returns the start time string (e.g., "8:30 AM") for the earliest slot,
+        or None if no slot is available.
+        """
+        if not self.scheduled_tasks:
+            # No tasks scheduled yet, start from the beginning
+            start_minutes = DAY_START_HOUR * 60
+            if duration_minutes <= self.owner.available_minutes:
+                return _minutes_to_time_str(start_minutes)
+            return None
+
+        # Ensure tasks are sorted by time
+        self.sort_by_time()
+
+        # Check for gaps between scheduled tasks
+        day_start_minutes = DAY_START_HOUR * 60
+        day_end_minutes = day_start_minutes + self.owner.available_minutes
+
+        # Check gap before first task
+        first_task_start = _time_str_to_minutes(self.scheduled_tasks[0].start_time)
+        if first_task_start - day_start_minutes >= duration_minutes:
+            return _minutes_to_time_str(day_start_minutes)
+
+        # Check gaps between consecutive tasks
+        for i in range(len(self.scheduled_tasks) - 1):
+            current_task = self.scheduled_tasks[i]
+            next_task = self.scheduled_tasks[i + 1]
+
+            current_end = _time_str_to_minutes(current_task.start_time) + current_task.duration_minutes
+            next_start = _time_str_to_minutes(next_task.start_time)
+
+            gap_duration = next_start - current_end
+            if gap_duration >= duration_minutes:
+                return _minutes_to_time_str(current_end)
+
+        # Check gap after last task
+        last_task = self.scheduled_tasks[-1]
+        last_end = _time_str_to_minutes(last_task.start_time) + last_task.duration_minutes
+        remaining_time = day_end_minutes - last_end
+
+        if remaining_time >= duration_minutes:
+            return _minutes_to_time_str(last_end)
+
+        # No available slot found
+        return None
+
+    def to_dict(self) -> Dict[str, Any]:
+        """Convert scheduler to dictionary for JSON serialization."""
+        return {
+            "owner": {
+                "name": self.owner.name,
+                "available_minutes": self.owner.available_minutes,
+                "pet": {
+                    "name": self.owner.pet.name,
+                    "species": self.owner.pet.species,
+                    "age": self.owner.pet.age,
+                }
+            },
+            "tasks": [
+                {
+                    "title": task.title,
+                    "duration_minutes": task.duration_minutes,
+                    "priority": task.priority,
+                    "recurrence": task.recurrence,
+                    "start_time": task.start_time,
+                    "completed": task.completed,
+                }
+                for task in self.tasks
+            ],
+            "scheduled_tasks": [
+                {
+                    "title": task.title,
+                    "duration_minutes": task.duration_minutes,
+                    "priority": task.priority,
+                    "recurrence": task.recurrence,
+                    "start_time": task.start_time,
+                    "completed": task.completed,
+                }
+                for task in self.scheduled_tasks
+            ],
+            "skipped_tasks": [
+                {
+                    "title": task.title,
+                    "duration_minutes": task.duration_minutes,
+                    "priority": task.priority,
+                    "recurrence": task.recurrence,
+                    "start_time": task.start_time,
+                    "completed": task.completed,
+                }
+                for task in self.skipped_tasks
+            ],
+        }
+
+    @classmethod
+    def from_dict(cls, data: Dict[str, Any]) -> "Scheduler":
+        """Reconstruct scheduler from dictionary loaded from JSON."""
+        # Reconstruct pet
+        pet_data = data["owner"]["pet"]
+        pet = Pet(
+            name=pet_data["name"],
+            species=pet_data["species"],
+            age=pet_data["age"]
+        )
+
+        # Reconstruct owner
+        owner_data = data["owner"]
+        owner = Owner(
+            name=owner_data["name"],
+            available_minutes=owner_data["available_minutes"],
+            pet=pet
+        )
+
+        # Create scheduler
+        scheduler = cls(owner=owner)
+
+        # Reconstruct tasks
+        def task_from_dict(task_data: Dict[str, Any]) -> Task:
+            task = Task(
+                title=task_data["title"],
+                duration_minutes=task_data["duration_minutes"],
+                priority=task_data["priority"],
+                recurrence=task_data.get("recurrence"),  # Handle None values
+            )
+            task.start_time = task_data.get("start_time")  # Handle None values
+            task.completed = task_data["completed"]
+            return task
+
+        scheduler.tasks = [task_from_dict(t) for t in data["tasks"]]
+        scheduler.scheduled_tasks = [task_from_dict(t) for t in data["scheduled_tasks"]]
+        scheduler.skipped_tasks = [task_from_dict(t) for t in data["skipped_tasks"]]
+
+        return scheduler
+
+    def save_to_file(self, filename: str) -> None:
+        """Save scheduler data to JSON file."""
+        data = self.to_dict()
+        with open(filename, 'w', encoding='utf-8') as f:
+            json.dump(data, f, indent=2, ensure_ascii=False)
+
+    @classmethod
+    def load_from_file(cls, filename: str) -> Optional["Scheduler"]:
+        """Load scheduler data from JSON file. Returns None if file doesn't exist."""
+        if not os.path.exists(filename):
+            return None
+
+        try:
+            with open(filename, 'r', encoding='utf-8') as f:
+                data = json.load(f)
+            return cls.from_dict(data)
+        except (json.JSONDecodeError, KeyError, ValueError) as e:
+            print(f"Error loading {filename}: {e}")
+            return None
 
     def explain_plan(self) -> list[str]:
         """Return a human-readable explanation of why each task was scheduled or skipped."""

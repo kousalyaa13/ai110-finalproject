@@ -3,25 +3,48 @@ from pawpal_system import Pet, Owner, Task, Scheduler
 
 st.set_page_config(page_title="PawPal+", page_icon="🐾", layout="centered")
 
+# Data persistence file
+PERSISTENCE_FILE = "pawpal_data.json"
+
 PRIORITY_EMOJI = {"high": "🔴 High", "medium": "🟡 Medium", "low": "🟢 Low"}
 
 st.title("🐾 PawPal+")
 
 st.divider()
 
+# --- Load existing data or create default ---
+if "scheduler" not in st.session_state:
+    # Try to load from file first
+    loaded_scheduler = Scheduler.load_from_file(PERSISTENCE_FILE)
+    if loaded_scheduler:
+        st.session_state.scheduler = loaded_scheduler
+        st.session_state.owner_name = loaded_scheduler.owner.name
+        st.session_state.pet_name = loaded_scheduler.owner.pet.name
+        st.session_state.species = loaded_scheduler.owner.pet.species
+        st.session_state.available_minutes = loaded_scheduler.owner.available_minutes
+        st.success("✅ Loaded previous session data!")
+    else:
+        # Create default scheduler
+        pet = Pet(name="Mochi", species="dog", age=3)
+        owner = Owner(name="Jordan", available_minutes=90, pet=pet)
+        st.session_state.scheduler = Scheduler(owner=owner)
+        st.session_state.owner_name = owner.name
+        st.session_state.pet_name = pet.name
+        st.session_state.species = pet.species
+        st.session_state.available_minutes = owner.available_minutes
+
 # --- Owner & Pet setup ---
 st.subheader("Owner & Pet Info")
-owner_name = st.text_input("Owner name", value="Jordan")
-pet_name = st.text_input("Pet name", value="Mochi")
-species = st.selectbox("Species", ["dog", "cat", "other"])
+owner_name = st.text_input("Owner name", value=st.session_state.owner_name)
+pet_name = st.text_input("Pet name", value=st.session_state.pet_name)
+species = st.selectbox("Species", ["dog", "cat", "other"], index=["dog", "cat", "other"].index(st.session_state.species))
 available_minutes = st.number_input(
-    "Available time today (minutes)", min_value=10, max_value=480, value=90
+    "Available time today (minutes)", min_value=10, max_value=480, value=st.session_state.available_minutes
 )
 
 # Build or rebuild the Scheduler when owner/pet info changes
 if (
-    "scheduler" not in st.session_state
-    or st.session_state.get("owner_name") != owner_name
+    st.session_state.get("owner_name") != owner_name
     or st.session_state.get("pet_name") != pet_name
     or st.session_state.get("species") != species
     or st.session_state.get("available_minutes") != available_minutes
@@ -33,6 +56,10 @@ if (
     st.session_state.pet_name = pet_name
     st.session_state.species = species
     st.session_state.available_minutes = available_minutes
+
+    # Save changes to file
+    st.session_state.scheduler.save_to_file(PERSISTENCE_FILE)
+    st.success("💾 Data saved!")
 
 st.divider()
 
@@ -57,7 +84,9 @@ if st.button("Add task"):
         recurrence=None if recurrence == "none" else recurrence,
     )
     st.session_state.scheduler.add_task(task)
-    st.success(f"Added: **{task_title}** ({priority} priority, {duration} min)")
+    # Save after adding task
+    st.session_state.scheduler.save_to_file(PERSISTENCE_FILE)
+    st.success(f"Added: **{task_title}** ({priority} priority, {duration} min) 💾")
 
 # Display current task pool
 current_tasks = st.session_state.scheduler.tasks
@@ -90,6 +119,8 @@ if st.button("Generate schedule"):
     else:
         scheduler.build_schedule()
         scheduler.sort_by_time()
+        # Save after building schedule
+        scheduler.save_to_file(PERSISTENCE_FILE)
 
         time_used = sum(t.duration_minutes for t in scheduler.scheduled_tasks)
         time_remaining = int(available_minutes) - time_used
