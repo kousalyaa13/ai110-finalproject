@@ -230,3 +230,7 @@ Working with AI tools showed me the importance of being an active collaborator r
 The project also reinforced that good system design is about trade-offs. We chose simplicity over optimality because pet owners need reliable, understandable schedules more than mathematically perfect ones. This pragmatism—prioritizing what matters most to users—is a key lesson for any AI system builder.
 
 Most importantly, this project demonstrated how AI can augment human problem-solving. The system doesn't replace pet owner judgment; it amplifies it by handling the tedious optimization work, leaving owners free to focus on the relationship aspects of pet care.
+
+## Video Walkthrough
+
+Link!
