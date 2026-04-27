@@ -8,7 +8,7 @@ This test suite proves the PawPal+ scheduling system works reliably through:
 - Integration validation: End-to-end testing of the complete scheduling workflow
 - Advanced algorithmic capability: find_next_available_slot for intelligent gap detection
 - Data persistence layer: JSON save/load functionality with comprehensive testing
-- AI Task Recommendations: Gemini API integration for personalized care suggestions
+- AI Task Recommendations: Gemini 2.5 Flash API integration for personalized care suggestions
 
 Testing Summary:
 36 out of 36 tests passed; the system handles all tested scenarios including edge cases, advanced gap-finding, data persistence, and AI-powered recommendations.
