@@ -1,6 +1,6 @@
 {
   "owner": {
-    "name": "Kousalya",
+    "name": "Alya",
     "available_minutes": 120,
     "pet": {
       "name": "Choco",
@@ -14,10 +14,116 @@
       "duration_minutes": 20,
       "priority": "high",
       "recurrence": null,
+      "start_time": "8:00 AM",
+      "completed": false
+    },
+    {
+      "title": "Feeding",
+      "duration_minutes": 15,
+      "priority": "high",
+      "recurrence": null,
+      "start_time": "8:20 AM",
+      "completed": false
+    },
+    {
+      "title": "Play",
+      "duration_minutes": 20,
+      "priority": "medium",
+      "recurrence": null,
+      "start_time": "9:20 AM",
+      "completed": false
+    },
+    {
+      "title": "Cuddle",
+      "duration_minutes": 10,
+      "priority": "low",
+      "recurrence": null,
+      "start_time": "9:50 AM",
+      "completed": false
+    },
+    {
+      "title": "Afternoon Exercise & Playtime",
+      "duration_minutes": 45,
+      "priority": "high",
+      "recurrence": "daily",
+      "start_time": "8:35 AM",
+      "completed": false
+    },
+    {
+      "title": "Daily Brushing & Dental Care",
+      "duration_minutes": 10,
+      "priority": "medium",
+      "recurrence": "daily",
+      "start_time": "9:40 AM",
+      "completed": false
+    },
+    {
+      "title": "Weekly Health Check & Grooming",
+      "duration_minutes": 30,
+      "priority": "medium",
+      "recurrence": "weekly",
       "start_time": null,
       "completed": false
     }
   ],
-  "scheduled_tasks": [],
-  "skipped_tasks": []
+  "scheduled_tasks": [
+    {
+      "title": "Morning walk",
+      "duration_minutes": 20,
+      "priority": "high",
+      "recurrence": null,
+      "start_time": "8:00 AM",
+      "completed": false
+    },
+    {
+      "title": "Feeding",
+      "duration_minutes": 15,
+      "priority": "high",
+      "recurrence": null,
+      "start_time": "8:20 AM",
+      "completed": false
+    },
+    {
+      "title": "Afternoon Exercise & Playtime",
+      "duration_minutes": 45,
+      "priority": "high",
+      "recurrence": "daily",
+      "start_time": "8:35 AM",
+      "completed": false
+    },
+    {
+      "title": "Play",
+      "duration_minutes": 20,
+      "priority": "medium",
+      "recurrence": null,
+      "start_time": "9:20 AM",
+      "completed": false
+    },
+    {
+      "title": "Daily Brushing & Dental Care",
+      "duration_minutes": 10,
+      "priority": "medium",
+      "recurrence": "daily",
+      "start_time": "9:40 AM",
+      "completed": false
+    },
+    {
+      "title": "Cuddle",
+      "duration_minutes": 10,
+      "priority": "low",
+      "recurrence": null,
+      "start_time": "9:50 AM",
+      "completed": false
+    }
+  ],
+  "skipped_tasks": [
+    {
+      "title": "Weekly Health Check & Grooming",
+      "duration_minutes": 30,
+      "priority": "medium",
+      "recurrence": "weekly",
+      "start_time": null,
+      "completed": false
+    }
+  ]
 }

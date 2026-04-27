@@ -249,63 +249,48 @@ class Scheduler:
             # Get API key from environment
             api_key = os.getenv('GOOGLE_API_KEY')
             if not api_key:
+                print("DEBUG: GOOGLE_API_KEY not found in environment variables")
                 return []
 
             client = genai.Client(api_key=api_key)
 
-            # Create structured prompt with few-shot examples
-            prompt = f"""
-You are an expert veterinarian and pet care specialist. Based on the following pet profile, suggest 6-8 essential daily and weekly care tasks that would be appropriate for this specific animal.
+            # Create structured prompt with few-shot examples - simplified for cleaner JSON output
+            prompt = f"""Generate 5-6 pet care task recommendations as a JSON array. Only return valid JSON, nothing else.
 
-Pet Profile:
-- Species: {self.pet.species}
-- Age: {self.pet.age} years old
-- Owner available time: {self.owner.available_minutes} minutes per day
-- Pet name: {self.pet.name}
+Pet: {self.pet.species}, {self.pet.age} years old, {self.owner.available_minutes} min/day available
 
-For each task, provide:
-- title: A clear, specific task name
-- duration_minutes: Realistic time estimate based on the pet's needs
-- priority: "high" for critical care (feeding, medication), "medium" for important care (exercise, grooming), "low" for optional enrichment
-- recurrence: "daily", "weekly", or null for one-time tasks
-
-Return ONLY a valid JSON array of task objects. No additional text or explanation.
-
-Examples:
-
-For a "dog, 2 years old" with 90 minutes available:
+Return format:
 [
-  {{"title": "Morning walk", "duration_minutes": 30, "priority": "high", "recurrence": "daily"}},
-  {{"title": "Breakfast feeding", "duration_minutes": 10, "priority": "high", "recurrence": "daily"}},
-  {{"title": "Playtime/fetch", "duration_minutes": 20, "priority": "medium", "recurrence": "daily"}},
-  {{"title": "Brush coat", "duration_minutes": 15, "priority": "medium", "recurrence": "weekly"}},
-  {{"title": "Training session", "duration_minutes": 15, "priority": "low", "recurrence": "daily"}}
+  {{"title": "Task name", "duration_minutes": 10, "priority": "high", "recurrence": "daily"}},
+  {{"title": "Task name", "duration_minutes": 15, "priority": "medium", "recurrence": "weekly"}}
 ]
 
-For a "cat, 1 year old" with 60 minutes available:
-[
-  {{"title": "Litter box cleaning", "duration_minutes": 10, "priority": "high", "recurrence": "daily"}},
-  {{"title": "Breakfast feeding", "duration_minutes": 5, "priority": "high", "recurrence": "daily"}},
-  {{"title": "Interactive play", "duration_minutes": 15, "priority": "medium", "recurrence": "daily"}},
-  {{"title": "Brush fur", "duration_minutes": 10, "priority": "medium", "recurrence": "weekly"}},
-  {{"title": "Litter box change", "duration_minutes": 20, "priority": "medium", "recurrence": "weekly"}}
-]
-"""
+Valid priorities: "high", "medium", "low"
+Valid recurrence: "daily", "weekly", null"""
 
             response = client.models.generate_content(
-                model="gemini-1.5-flash",
+                model="gemini-2.5-flash",
                 contents=prompt,
                 config={
                     "temperature": 0.3,
-                    "max_output_tokens": 800,
+                    "max_output_tokens": 2000,
                 },
             )
 
             # Parse the response text
-            if hasattr(response, "text") and response.text:
-                content = response.text.strip()
-            else:
+            if not hasattr(response, "text") or not response.text or not response.text.strip():
                 return []
+            
+            content = response.text.strip()
+            
+            # Extract JSON from markdown code blocks if present
+            if content.startswith("```"):
+                # Remove markdown code block markers: ```json ... ```
+                content = content.split("```")[1]  # Get content between first and second ```
+                if content.startswith("json"):
+                    content = content[4:]  # Remove 'json' language identifier
+                content = content.strip()
+            
             recommendations = json.loads(content)
 
             # Validate the response structure
@@ -325,8 +310,32 @@ For a "cat, 1 year old" with 60 minutes available:
 
             return validated_recommendations[:8]  # Limit to 8 recommendations
 
+        except json.JSONDecodeError as e:
+            print(f"AI recommendation error - JSON parsing failed: {e}")
+            print(f"Response length: {len(content) if 'content' in locals() else 'N/A'}")
+            print(f"Full response text:\n{content if 'content' in locals() else 'N/A'}")
+            
+            # Try to recover incomplete JSON by finding the last valid ] or }
+            if 'content' in locals() and content:
+                # Try to fix incomplete JSON by finding the last array closing bracket
+                last_bracket = content.rfind(']')
+                if last_bracket > 0:
+                    try:
+                        truncated = content[:last_bracket + 1]
+                        recommendations = json.loads(truncated)
+                        print(f"Successfully recovered partial JSON with {len(recommendations)} items")
+                        if isinstance(recommendations, list):
+                            return recommendations
+                    except:
+                        pass
+            
+            import traceback
+            traceback.print_exc()
+            return []
         except Exception as e:
             print(f"AI recommendation error: {e}")
+            import traceback
+            traceback.print_exc()
             return []
 
     def to_dict(self) -> Dict[str, Any]:

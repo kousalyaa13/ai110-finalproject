@@ -119,7 +119,12 @@ with col1:
                 st.session_state.ai_recommendations = recommendations
                 st.success(f"🤖 Generated {len(recommendations)} personalized task suggestions!")
             else:
-                st.error("❌ Could not generate recommendations. Check your GOOGLE_API_KEY environment variable.")
+                st.error("❌ Could not generate recommendations.")
+                st.info("Check the **terminal/console output** for detailed error messages. Common issues:\n- API key is invalid or expired\n- Google Generative AI API is not enabled in your Google Cloud project\n- Network connectivity issues")
+                # Debug info
+                import os
+                has_key = bool(os.getenv('GOOGLE_API_KEY'))
+                st.caption(f"DEBUG: API Key loaded? {has_key}")
 
 with col2:
     if st.button("Clear Suggestions"):
