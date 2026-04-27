@@ -261,8 +261,6 @@ Most importantly, this project demonstrated how AI can augment human problem-sol
   Your browser does not support the video tag.
 </video>
 
-*Note: Video demonstrates end-to-end functionality including AI task recommendations, scheduling, and conflict detection.*
-
 ## Presentation
 
 Slide Deck!
