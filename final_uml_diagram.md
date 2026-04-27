@@ -1,7 +1,4 @@
-# PawPal+ UML Design
----
-
-```
+```mermaid
 classDiagram
     class Pet {
         +str name
@@ -55,6 +52,7 @@ classDiagram
         +find_cross_scheduler_conflicts(schedulers: list) list~str~
     }
 
+    %% Relationships
     Owner "1" --> "1" Pet : owns
     Scheduler --> Owner : uses
     Scheduler ..> Pet : derived from owner
@@ -62,6 +60,7 @@ classDiagram
     Task ..> Task : next_occurrence()
     Scheduler ..> Utilities : uses
 
-note right of Scheduler : generate_task_recommendations()\nuses Google Gemini 2.5 Flash API\nRequires GOOGLE_API_KEY env var
-```
-```
+    %% AI Integration Note
+    note right of Scheduler : generate_task_recommendations()~n~uses Google Gemini 2.5 Flash API~n~Requires GOOGLE_API_KEY env var
+```</content>
+<parameter name="filePath">c:\Users\kousa\Documents\CodePath\ai110\applied-ai-system-project\final_uml_diagram.md
