@@ -30,7 +30,7 @@
       "duration_minutes": 20,
       "priority": "medium",
       "recurrence": null,
-      "start_time": "9:20 AM",
+      "start_time": null,
       "completed": false
     },
     {
@@ -38,7 +38,7 @@
       "duration_minutes": 10,
       "priority": "low",
       "recurrence": null,
-      "start_time": "9:50 AM",
+      "start_time": null,
       "completed": false
     },
     {
@@ -54,7 +54,7 @@
       "duration_minutes": 10,
       "priority": "medium",
       "recurrence": "daily",
-      "start_time": "9:40 AM",
+      "start_time": "9:50 AM",
       "completed": false
     },
     {
@@ -62,6 +62,22 @@
       "duration_minutes": 30,
       "priority": "medium",
       "recurrence": "weekly",
+      "start_time": null,
+      "completed": false
+    },
+    {
+      "title": "Evening Walk & Potty Break",
+      "duration_minutes": 30,
+      "priority": "high",
+      "recurrence": "daily",
+      "start_time": "9:20 AM",
+      "completed": false
+    },
+    {
+      "title": "Interactive Play & Mental Stimulation",
+      "duration_minutes": 20,
+      "priority": "high",
+      "recurrence": "daily",
       "start_time": null,
       "completed": false
     }
@@ -92,10 +108,10 @@
       "completed": false
     },
     {
-      "title": "Play",
-      "duration_minutes": 20,
-      "priority": "medium",
-      "recurrence": null,
+      "title": "Evening Walk & Potty Break",
+      "duration_minutes": 30,
+      "priority": "high",
+      "recurrence": "daily",
       "start_time": "9:20 AM",
       "completed": false
     },
@@ -104,7 +120,33 @@
       "duration_minutes": 10,
       "priority": "medium",
       "recurrence": "daily",
-      "start_time": "9:40 AM",
+      "start_time": "9:50 AM",
+      "completed": false
+    }
+  ],
+  "skipped_tasks": [
+    {
+      "title": "Interactive Play & Mental Stimulation",
+      "duration_minutes": 20,
+      "priority": "high",
+      "recurrence": "daily",
+      "start_time": null,
+      "completed": false
+    },
+    {
+      "title": "Play",
+      "duration_minutes": 20,
+      "priority": "medium",
+      "recurrence": null,
+      "start_time": null,
+      "completed": false
+    },
+    {
+      "title": "Weekly Health Check & Grooming",
+      "duration_minutes": 30,
+      "priority": "medium",
+      "recurrence": "weekly",
+      "start_time": null,
       "completed": false
     },
     {
@@ -112,16 +154,6 @@
       "duration_minutes": 10,
       "priority": "low",
       "recurrence": null,
-      "start_time": "9:50 AM",
-      "completed": false
-    }
-  ],
-  "skipped_tasks": [
-    {
-      "title": "Weekly Health Check & Grooming",
-      "duration_minutes": 30,
-      "priority": "medium",
-      "recurrence": "weekly",
       "start_time": null,
       "completed": false
     }

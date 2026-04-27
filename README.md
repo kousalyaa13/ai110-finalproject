@@ -124,78 +124,42 @@ The test suite includes **36 comprehensive tests** covering scheduling logic, ed
 
 ### Basic Scheduling Example
 **Input:**
-- Owner: Jordan, 90 minutes available
-- Pet: Mochi (dog)
+![](assets/pic1.jpg)
 - Tasks:
-  - Morning walk: 30 min, high priority, daily recurrence
-  - Breakfast feeding: 10 min, high priority, daily recurrence
-  - Flea medication: 5 min, medium priority, weekly recurrence
-  - Fetch/playtime: 40 min, low priority
-  - Bath: 45 min, low priority
+  - Morning walk: 20 min, high priority
+  - Feeding: 15 min, high priority
+  - Play: 20 min, medium priority
+  - Cuddle: 10 min, low priority
+  - Afternoon Exercise & Playtime: 45 min, high priority, daily occurence
+  - Daily Brushing & Dental Care: 10 min, medium priority, daily occurence
+  - Weekly Health Check & Grooming: 30 min, medium priority, weekly occurence
 
 **Output:**
-```
-Scheduled tasks (sorted by start time):
-┌─────────────┬────────────────────┬────────────┬────────────┬─────────────┬─────────┐
-│ Start       │ Task               │ Duration   │ Priority   │ Recurrence  │ Status  │
-├─────────────┼────────────────────┼────────────┼────────────┼─────────────┼─────────┤
-│ 8:00 AM    │ Morning walk        │ 30 min     │ 🔴 high    │ 🔁 daily    │ ⏳ pending │
-│ 8:30 AM    │ Breakfast feeding   │ 10 min     │ 🔴 high    │ 🔁 daily    │ ⏳ pending │
-│ 8:40 AM    │ Flea medication     │ 5 min      │ 🟡 medium  │ 📅 weekly   │ ⏳ pending │
-│ 8:45 AM    │ Fetch / playtime    │ 40 min     │ 🟢 low     │ —           │ ⏳ pending │
-└─────────────┴────────────────────┴────────────┴────────────┴─────────────┴─────────┘
-
-Skipped tasks (not enough time):
-┌────────────────────┬────────────┬────────────┐
-│ Task               │ Duration   │ Priority   │
-├────────────────────┼────────────┼────────────┤
-│ Bath               │ 45 min     │ 🟢 low     │
-└────────────────────┴────────────┴────────────┘
-
-✅ No scheduling conflicts detected.
-
-Time used: 85 min | Time remaining: 5 min
-```
+![](assets/pic2.jpg)
 
 ### AI Task Recommendations Example
-**Input:** Click "Get AI Suggestions" for a 2-year-old dog with 90 minutes available
+**Input:** Click "Get AI Suggestions" for a 3-year-old dog with 120 minutes available
 
 **AI Response:**
-```
-🤖 Generated 6 personalized task suggestions!
-
-Recommended Tasks:
-□ Morning walk (30 min, high priority, daily)
-□ Breakfast feeding (10 min, high priority, daily)
-□ Playtime/fetch (20 min, medium priority, daily)
-□ Brush coat (15 min, medium priority, weekly)
-□ Training session (15 min, low priority, daily)
-□ Nail trimming (10 min, low priority, weekly)
-```
+![](assets/pic3a.jpg)
 
 **Output:** User can select which AI-suggested tasks to add to their schedule, then PawPal+ incorporates them into the optimized daily plan.
+
+![](assets/pic3b.jpg)
 
 ### Recurrence Demonstration
 **Input:** Complete the "Morning walk" task
 
 **Output:**
-```
-Completing 'Morning walk' (recurrence: daily)
-next_occurrence → Task(title='Morning walk', duration_minutes=30, priority='high', recurrence='daily', start_time=None, completed=False)
-Pool size after: 6 (expected +1)
-```
-
+![](assets/pic5.jpg)
 The completed task regenerates a fresh copy for the next day, maintaining the daily routine.
 
 ### Conflict Detection Example
-**Input:** Two overlapping tasks
-- Morning walk: starts 8:00 AM, 30 min duration
-- Vet visit: starts 8:15 AM, 60 min duration
+**Input:** Too many tasks needed to be completed in the 120 mins time period, thus completing tasks with highest priority to stay within the time frame.
 
 **Output:**
-```
-⚠️  Conflict: "Morning walk" (8:00 AM - 8:30 AM) overlaps with "Vet visit" (8:15 AM - 9:15 AM)
-```
+![](assets/pic4.jpg)
+1 task skipped due to not enough time
 
 ### Cross-Pet Conflict Example
 **Input:** Jordan owns both Mochi (dog) and Luna (cat)
@@ -285,6 +249,30 @@ The project also reinforced that good system design is about trade-offs. We chos
 **AI Integration Insights:** Adding Gemini 2.5 Flash for task recommendations was a substantial enhancement that earned 3 points on the rubric (RAG, multi-step agent, specialized behavior). The AI feature provides meaningful behavioral changes by suggesting tasks users might not have considered, leading to more complete pet care schedules. However, it required careful error handling since external API dependencies may not always be available. The implementation demonstrates how AI can augment human problem-solving without replacing human judgment.
 
 Most importantly, this project demonstrated how AI can augment human problem-solving. The system doesn't replace pet owner judgment; it amplifies it by handling the tedious optimization work, leaving owners free to focus on the relationship aspects of pet care.
+
+## Screenshots & Diagrams
+
+The following images show the PawPal+ user interface and UML diagrams. All visuals are included in the `assets/` folder.
+
+### UI Screenshots
+
+![UI Screenshot 1](assets/pic1.jpg)
+
+![UI Screenshot 2](assets/pic2.jpg)
+
+![UI Screenshot 3A](assets/pic3a.jpg)
+
+![UI Screenshot 3B](assets/pic3b.jpg)
+
+![UI Screenshot 4](assets/pic4.jpg)
+
+![UI Screenshot 5](assets/pic5.jpg)
+
+![UI Screenshot 6](assets/pic6.jpg)
+
+### UML Diagram
+
+![Final UML Diagram](assets/uml_final.jpg)
 
 ## Video Walkthrough
 
