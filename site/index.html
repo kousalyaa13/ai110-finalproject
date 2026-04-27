@@ -1,0 +1,249 @@
+
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+        
+
+        <link rel="stylesheet" href="mkslides-assets\reveal-js/dist/reveal.css" />
+
+        
+            <link rel="stylesheet" href="mkslides-assets\reveal-js\dist\theme\black.css" />
+        
+        
+            <link rel="stylesheet" href="mkslides-assets\highlight-js-themes\monokai.css" />
+        
+
+        
+    </head>
+    <body>
+        <div class="reveal">
+            <div class="slides">
+                <section data-markdown
+                
+                >
+                    <!-- The markdown must be placed to the whole left to prevent indentation issues like https://github.com/MartenBE/mkslides/issues/52 -->
+                    <textarea data-template>
+# Slide 1: Title
+
+## PawPal+ AI Pet Care Scheduler
+
+- Extending a pet care scheduling app with Google Gemini 2.5 Flash AI recommendations
+- Original base project: scheduling assistant with recurring tasks, priority ordering, and conflict detection
+- New extension: AI-powered task suggestions, JSON persistence, and reliability handling
+
+**Image:** `assets/pic1.jpg` (home screen or main UI screenshot)
+
+---
+
+# Slide 2: Original Project and Scope
+
+## Base Project Context
+
+- Goal: build a pet care scheduler that helps owners manage tasks and routines
+- Capabilities:
+  - Add care tasks with duration and priority
+  - Schedule tasks within owner available time
+  - Detect and report scheduling conflicts
+  - Support daily and weekly recurrence
+- This made a strong foundation for adding AI intelligence
+
+**Image:** `assets/pic2.jpg` (task creation or schedule page screenshot)
+
+---
+
+# Slide 3: New AI Extension
+
+## What was added
+
+- Gemini 2.5 Flash powered task recommendations
+- Personalized suggestions based on pet profile and owner availability
+- Structured JSON output with validation
+- Fallback and error handling when AI output is malformed
+
+## Why it matters
+
+- Helps users discover useful care tasks they may miss
+- Makes schedule planning more complete and adaptive
+
+**Image:** `assets/pic3a.jpg` or `assets/pic3b.jpg` (AI recommendation UI)
+
+---
+
+# Slide 4: System Diagram
+
+## Main components
+
+- **Data Retriever / Loader**: loads saved pet, owner, and task data from JSON
+- **Agent**: AI recommendation engine using Gemini 2.5 Flash
+- **Scheduler**: builds schedules, detects conflicts, and explains decisions
+- **Evaluator / Tester**: validates behavior through automated tests and error handling
+
+## Data flow
+
+- Input → owner info, pet profile, tasks, saved data
+- Process → load data → generate AI suggestions → schedule tasks → detect conflicts → save data
+- Output → optimized schedule, recommendations, explanations
+
+## Human/testing involvement
+
+- User enters pet data and selects AI suggestions
+- User reviews outputs before accepting tasks
+- Automated tests verify reliability and guardrails
+
+**Image:** `assets/uml_final.jpg` (final UML diagram)
+
+---
+
+# Slide 5: Demo Case 1 — End-to-End Run
+
+## Example scenario
+
+- Input 1: dog, 90 minutes available, feeding + walk tasks
+- Input 2: cat, 60 minutes available, litter + play tasks
+- Input 3: request AI suggestions for a new pet
+
+## Show outputs
+
+- Scheduled tasks list with start times
+- Skipped tasks and reason
+- Time used vs remaining time
+
+**Image:** `assets/pic4.jpg` (schedule output screenshot)
+
+---
+
+# Slide 6: AI Feature Behavior
+
+## How the AI works
+
+- Uses pet species, age, name, and owner availability
+- Generates 5-6 personalized care tasks
+- Each recommendation includes:
+  - `title`
+  - `duration_minutes`
+  - `priority`
+  - `recurrence`
+- Limits output to 8 recommendations maximum
+
+## Demo actions
+
+- Click "Get AI Suggestions"
+- Review generated tasks
+- Select tasks to add to the schedule
+
+**Image:** `assets/pic5.jpg` or `assets/pic6.jpg` (AI result screenshot)
+
+---
+
+# Slide 7: Reliability and Guardrails
+
+## Reliability features
+
+- Graceful fallback when `GOOGLE_API_KEY` is missing
+- Robust parsing for AI responses
+- Validation of structure, priorities, and recurrence
+- Recovery logic for truncated or malformed JSON
+
+## Testing and evaluation
+
+- Automated tests cover scheduling, persistence, conflict detection, and AI behavior
+- Errors are surfaced in console/logs for developer debugging
+
+**Image:** `assets/pic6.jpg` or `assets/pic3b.jpg` (error/debug UI)
+
+---
+
+# Slide 8: Responsible AI Reflection
+
+## Limitations and bias
+
+- AI suggestions depend on prompt wording and may be generic
+- Unusual pets or specialized medical needs may not be handled accurately
+
+## Misuse and prevention
+
+- Risk: users may trust AI suggestions without vet review
+- Prevent by keeping humans in control, providing clear guidance, and encouraging verification
+
+## Reliability insight
+
+- Surprise: AI output can be wrapped in markdown or cut off unexpectedly
+- Improvement: prompt simplification and parsing safeguards made the feature much more robust
+
+---
+
+# Slide 9: Collaboration with AI
+
+## Helpful AI support
+
+- AI helped design the recommendation prompt
+- It suggested a structured JSON format and task-example patterns
+
+## Flawed AI behavior
+
+- AI output sometimes returned markdown wrappers or incomplete JSON
+- This required manual debugging and stronger validation
+
+## Collaboration takeaways
+
+- AI acted as a development partner, not a final decision-maker
+- Human review was essential for reliability and correctness
+
+---
+
+# Slide 10: Summary and Next Steps
+
+## Recap
+
+- Base project: pet care scheduler with recurrence, priorities, and conflict detection
+- Extension: Gemini 2.5 Flash AI recommendations and JSON persistence
+- Reliability: parsing guards, fallback behavior, and test coverage
+
+## Next improvements
+
+- Add multi-pet aggregated scheduling
+- Add user-specific health/medication rules
+- Add richer AI explanation feedback in the UI
+
+**Closing image:** `assets/uml_final.jpg` or `assets/pic1.jpg`
+                    </textarea>
+                </section>
+            </div>
+        </div>
+        <script src="mkslides-assets\reveal-js/dist/reveal.js"></script>
+        <script src="mkslides-assets\reveal-js/dist/plugin/highlight.js"></script>
+        <script src="mkslides-assets\reveal-js/dist/plugin/markdown.js"></script>
+        <script src="mkslides-assets\reveal-js/dist/plugin/math.js"></script>
+        <script src="mkslides-assets\reveal-js/dist/plugin/notes.js"></script>
+        <script src="mkslides-assets\reveal-js/dist/plugin/search.js"></script>
+        <script src="mkslides-assets\reveal-js/dist/plugin/zoom.js"></script>
+
+        
+
+        <script>
+            Reveal.initialize({
+                
+                    
+                        history: true,
+                    
+                        slideNumber: "c/t",
+                    
+                
+                plugins: [
+                    RevealMarkdown, // Must come before the other plugins so they can hook into the generated HTML.
+                    RevealHighlight,
+                    RevealMath.KaTeX,
+                    RevealNotes,
+                    RevealSearch,
+                    RevealZoom,
+
+                    
+                ],
+            });
+        </script>
+    </body>
+</html>

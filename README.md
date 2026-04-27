@@ -1,4 +1,4 @@
-# PawPal+
+# PawPal+ AI Pet Care Scheduler
 
 ## Overview
 
