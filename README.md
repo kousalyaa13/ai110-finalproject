@@ -250,30 +250,19 @@ The project also reinforced that good system design is about trade-offs. We chos
 
 Most importantly, this project demonstrated how AI can augment human problem-solving. The system doesn't replace pet owner judgment; it amplifies it by handling the tedious optimization work, leaving owners free to focus on the relationship aspects of pet care.
 
-## Screenshots & Diagrams
-
-The following images show the PawPal+ user interface and UML diagrams. All visuals are included in the `assets/` folder.
-
-### UI Screenshots
-
-![UI Screenshot 1](assets/pic1.jpg)
-
-![UI Screenshot 2](assets/pic2.jpg)
-
-![UI Screenshot 3A](assets/pic3a.jpg)
-
-![UI Screenshot 3B](assets/pic3b.jpg)
-
-![UI Screenshot 4](assets/pic4.jpg)
-
-![UI Screenshot 5](assets/pic5.jpg)
-
-![UI Screenshot 6](assets/pic6.jpg)
-
 ### UML Diagram
 
 ![Final UML Diagram](assets/uml_final.jpg)
 
 ## Video Walkthrough
 
-Link!
+<video width="100%" controls>
+  <source src="assets/PawPal+ Video Walkthrough.mp4" type="video/mp4">
+  Your browser does not support the video tag.
+</video>
+
+*Note: Video demonstrates end-to-end functionality including AI task recommendations, scheduling, and conflict detection.*
+
+## Presentation
+
+Slide Deck!
