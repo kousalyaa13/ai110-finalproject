@@ -262,5 +262,4 @@ Most importantly, this project demonstrated how AI can augment human problem-sol
 </video>
 
 ## Presentation
-
-Slide Deck!
+https://canva.link/7b07gnv93oqxtcg 
