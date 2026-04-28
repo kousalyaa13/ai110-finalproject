@@ -251,15 +251,10 @@ The project also reinforced that good system design is about trade-offs. We chos
 Most importantly, this project demonstrated how AI can augment human problem-solving. The system doesn't replace pet owner judgment; it amplifies it by handling the tedious optimization work, leaving owners free to focus on the relationship aspects of pet care.
 
 ### UML Diagram
-
 ![Final UML Diagram](assets/uml_final.jpg)
 
 ## Video Walkthrough
-
-<video width="100%" controls>
-  <source src="assets/PawPal+ Video Walkthrough.mp4" type="video/mp4">
-  Your browser does not support the video tag.
-</video>
+https://drive.google.com/file/d/1JWnMXr2tXDVrTacdpSETOoonN-2NxHf8/view?usp=sharing
 
 ## Presentation
 https://canva.link/7b07gnv93oqxtcg 
